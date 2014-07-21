@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project ECS-KESWS">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/ECSKESWS/service/ECSKESWS.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="ECSKESWSService.ECSKESWSIntergrationService"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <zipfileset excludes="META-INF/*.SF" src="D:/workspace/ECS-KESWS/libs/snsjar/mhxUtil.jar"/>
+            <fileset dir="D:/workspace/ECS-KESWS/libs/snsjar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/workspace/ECS-KESWS/libs/snsjar/mhx.jar"/>
+            <fileset dir="D:/workspace/ECS-KESWS/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/kim/Downloads/mysql-connector-java-5.1.26/mysql-connector-java-5.1.26-bin.jar"/>
+        </jar>
+    </target>
+</project>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <applicationconfiguration>
+     <InboxFolder>C:\\ECSKESWS\\keswsinbox\\</InboxFolder>
+     <OutboxFolder>C:\\ECSKESWS\\keswsoutbox\\</OutboxFolder>
+     <InboxArchiveFolder>C:\\ECSKESWS\\keswsinboxarchive\\</InboxArchiveFolder>
+     <OutboxArchiveFolder>C:\\ECSKESWS\\keswsoutboxarchive\\</OutboxArchiveFolder>
+     <ProcessingFolder>C:\\ECSKESWS\\processbox\\</ProcessingFolder> 
+     <MaximumTimeToHoldFilesBeingProcessed>24:00:00</MaximumTimeToHoldFilesBeingProcessed>
+     <AdditionalFolders></AdditionalFolders>
+     <IntergrationDatabaseurl>jdbc:mysql://LOCALHOST/KEPHISECSLATESTV1-1</IntergrationDatabaseurl>
+     <IntergrationDatabaseuser>IntergrationDatabaseUser</IntergrationDatabaseuser>
+     <IntergrationDatabasepassword>IntergrationDatabasePassword</IntergrationDatabasepassword>
+     <ECSDatabaseUrl>jdbc:mysql://192.168.0.17/KEPHISECSLATESTV1-1</ECSDatabaseUrl>
+     <ECSDatabaseuser>root</ECSDatabaseuser>
+     <ECSDatabasepassword>root</ECSDatabasepassword>
+     <MHXUserProfileFilePath>kephismhbuser.pro</MHXUserProfileFilePath>
+     <MHXRetriveIP>197.220.109.145</MHXRetriveIP>
+     <MHXUsername>kephismhbuser</MHXUsername>
+     <MHXUserPassword>Pass1234</MHXUserPassword>
+     <senderId></senderId>
+     <LogFile>ECSKESWSLogFile.html</LogFile>
+ </applicationconfiguration>
