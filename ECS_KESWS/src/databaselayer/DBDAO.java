@@ -228,6 +228,15 @@ public class DBDAO {
             e.printStackTrace();
             ECSKESWSLogger.Log(e.toString(), "SEVERE");
         }
+        /**
+         * Sep 3, 2014
+         * @added_by David Kimaru
+         * @purpose close db_connection
+         */
+        finally {
+            dao.CloseECSDBConnector();
+        
+        }
         return clientId;
     }
 
@@ -301,6 +310,15 @@ public class DBDAO {
             // TODO Auto-generated catch block
             e.printStackTrace();
             ECSKESWSLogger.Log(e.toString(), "SEVERE");
+        }
+        /**
+         * Sep 3, 2014
+         * @added_by David Kimaru
+         * @purpose close db_connection
+         */
+        finally {
+            dao.CloseECSDBConnector();
+        
         }
 
     }
@@ -428,6 +446,15 @@ public class DBDAO {
             e.printStackTrace();
             ECSKESWSLogger.Log(e.toString(), "SEVERE");
         }
+        /**
+         * Sep 3, 2014
+         * @added_by David Kimaru
+         * @purpose close db_connection
+         */
+        finally {
+            dao.CloseECSDBConnector();
+        
+        }
 
     }
 
@@ -525,6 +552,15 @@ public class DBDAO {
             // TODO Auto-generated catch block
             e.printStackTrace();
             ECSKESWSLogger.Log(e.toString(), "SEVERE");
+        }
+        /**
+         * Sep 3, 2014
+         * @added_by David Kimaru
+         * @purpose close db_connection
+         */
+        finally {
+            dao.CloseECSDBConnector();
+        
         }
         if (ConsigneeIdRef.intValue() == consigneeId) {
             return consigneeId;
@@ -688,7 +724,45 @@ public class DBDAO {
         }
 
     }
-
+    /**
+     * 
+     * @param fileName the name of the file to be inserted in the database. This should be unique, although the fn
+     * validates if the file exists in the database or not
+     * @return the ID of the inserted file. If the return is zero, there was no insert, teh file probalby exists
+     */
+    
+     public int saveFileName(String fileName) 
+     {
+        Statement stmt;
+        String[] fileExisting;
+	int insertkey = 0;
+	DBConnector dao = new DBConnector();
+        Connection conn = dao.GetECSDBConnector();
+        //check if the file exixts
+        fileExisting = ifFileExists(fileName);
+        if (fileExisting[0] == "FALSE"){
+            //file does not exist, thus we save it
+            try {
+                stmt = conn.createStatement();
+                String sql = "INSERT INTO `INBOX_LOGS` (File_Name, Received_Date_Time) VALUES ('" + fileName + "', NOW())";
+                stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+                ResultSet rs = stmt.getGeneratedKeys();
+                rs.next();
+                insertkey = rs.getInt(1);
+                conn.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                ECSKESWSLogger.Log(e.toString(), "SEVERE");
+                return insertkey;
+            }
+        }
+        
+	
+	return insertkey;
+}
+ 
+    
     public int trackTransactionDetails(String transactionType, String transactionDetails, int status, String KESWSID, String ECSInvoiceNo, String additionalTransactionDetails, String fileDetails) {
         Statement stmt;
         DBConnector dao = new DBConnector();
@@ -778,6 +852,66 @@ public class DBDAO {
             return insertkey;
         }
 
+    }
+    /**
+     * 
+     * @param fileName name of the file to be updated
+     * @param Update the integer value to update, 0 if invalid, 1 if valid.
+     * The fileName is required
+     * 
+     */
+     public void updateinboxFileasValid (String fileName, int Update) {
+        Statement st = null;
+        DBConnector dao = new DBConnector();
+        Connection conn = dao.GetECSDBConnector();
+        
+        try {
+            st = conn.createStatement();
+            ResultSet rs = st.executeQuery("UPDATE `INBOX_LOGS` SET `ISFILE_XML_VALID` = '" + Update + "' WHERE FILE_NAME ='" + fileName +"'");
+            
+           conn.close();
+        }catch (SQLException ex)
+        {
+            Logger.getLogger(DBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     
+    public String[] ifFileExists (String fileName) {
+        String[] fileIsExisting;
+        Statement st = null;
+        fileIsExisting = new String[2];
+        DBConnector dao = new DBConnector();
+        Connection conn = dao.GetECSDBConnector();
+        System.out.println("Gotten to this pt");
+        try {
+            st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT `INBOX_ID` FROM INBOX_LOGS WHERE FILE_NAME ='" + fileName +"'");
+            if (rs.getRow() != 0)
+            {
+                rs.next();
+                fileIsExisting[0] = "TRUE";
+                fileIsExisting[1] = rs.getString(1);
+                
+                
+            }else
+            {
+                fileIsExisting[0] = "FALSE";
+                fileIsExisting[1] = "FALSE";
+            }
+           conn.close();
+        }catch (SQLException ex)
+        {
+            Logger.getLogger(DBDAO.class.getName()).log(Level.SEVERE, null, ex);
+                fileIsExisting[0] = "FALSE";
+                fileIsExisting[1] = "FALSE";
+        }
+        //check if the file exists
+        //if it exists, we return index 0 as true, index 2 will be the file ID from the database
+        
+        
+        
+        
+        return fileIsExisting;
     }
 
     public void trackTransactionDetails(String transactionType, int status, String fileName, String additionalDetails) {
@@ -1090,6 +1224,15 @@ public class DBDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        /**
+         * Sep 3, 2014
+         * @added_by David Kimaru
+         * @purpose close db_connection
+         */
+        finally {
+            dao.CloseECSDBConnector();
+        
+        }
     }
 
     public int getLastTransactionId() {
@@ -1150,10 +1293,20 @@ public class DBDAO {
             if (rs.next()) {
                 producerId = rs.getInt("ID");
             }
+            conn.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             ECSKESWSLogger.Log(e.toString(), "SEVERE");
+        }
+        /**
+         * Sep 3, 2014
+         * @added_by David Kimaru
+         * @purpose close db_connection
+         */
+        finally {
+            dao.CloseECSDBConnector();
+        
         }
         return producerId + 1;
     }
@@ -1240,6 +1393,15 @@ public class DBDAO {
 
             e.printStackTrace();
             ECSKESWSLogger.Log(e.toString(), "SEVERE");
+        }
+        /**
+         * Sep 3, 2014
+         * @added_by David Kimaru
+         * @purpose close db_connection
+         */
+        finally {
+            dao.CloseECSDBConnector();
+        
         }
         return iscreated;
     }
@@ -1438,9 +1600,10 @@ public class DBDAO {
                 e.printStackTrace();
                 ECSKESWSLogger.Log(e.toString(), "SEVERE");
             }
+            
 
         }
-
+       
     }
 
     public int getMOCId(String MOC) {

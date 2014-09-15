@@ -41,6 +41,7 @@ public class DBConnector {
             e.printStackTrace();
             ECSKESWSLogger.Log(e.toString(), "SEVERE");
         }
+        connectionPool.shutdown();
         return conn;
     }
 
@@ -48,6 +49,7 @@ public class DBConnector {
         
         try {
             conn.close();
+            
         } catch (SQLException ex) {
             ECSKESWSLogger.Log(ex.toString(), "SEVERE");
         }

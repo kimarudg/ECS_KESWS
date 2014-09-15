@@ -22,6 +22,15 @@ import com.sns.mhx.util.MHAccess;
 import com.sns.mhx.util.MHAccessUnix;
 import java.util.logging.Level;
 
+/**
+ * 
+ * @author kimarudg
+ * @added added imports to get the date
+ */
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class FileProcessor {
 
 	private List<String> InboxFilesForProcessing;
@@ -61,8 +70,25 @@ public class FileProcessor {
 	public void moveXmlFilesProcessed(String sourcePathname,
 			String destPathname, List<String> files) {
 
-		InputStream inStream = null;
+		
+            InputStream inStream = null;
+                String destPath_name;
 		OutputStream outStream = null;
+                //get the current date and format it as as string
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date();
+                String currentDate = dateFormat.format(date);
+                //check if there is a directory
+                /**/
+                File theDir = new File (destPathname + currentDate );
+                if (!theDir.exists()){
+                    theDir.mkdir();
+                }
+                
+                
+                
+                destPath_name = destPathname + currentDate +"\\";
+                System.out.println("Destination is "+destPath_name);
 		File [] sourceFiles = new File[files.size()+1] ;
 		int i=0;
 		for(String filename: files){
@@ -75,7 +101,7 @@ public class FileProcessor {
 			if(sourcefile!= null && sourcefile.length() != 0){
 				
 			File sfile = sourcefile;
-			File dfile = new File(destPathname+files.get(i));
+			File dfile = new File(destPath_name+files.get(i));
 				
 			inStream = new FileInputStream(sfile);
 			outStream = new FileOutputStream(dfile);
@@ -87,7 +113,7 @@ public class FileProcessor {
 			}
 			inStream.close();
 			outStream.close();
-		    System.out.println("File is copied successful!");
+		    System.out.println("File is copied successful to destination!");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -171,6 +197,7 @@ public class FileProcessor {
         MHAccess mhAccess = new MHAccess();
             
         boolean isUserProfileOk = mhAccess.initUser(userProfileFilePath);
+        
         
         if (!isUserProfileOk) {
         	
